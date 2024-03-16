@@ -1,30 +1,21 @@
 // ==UserScript==
-// @name         小説家になろう 2024年3月版
-// @namespace    @todkuro
-// @version      0.1
-// @description  小説家になろう 2024年3月のデザイン変更に対応
+// @name         小説家になろう デザイン調整スクリプト
+// @namespace    https://github.com/todkuro/
 // @author       todokuro
+// @version      0.1
+// @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
+// @updateURL    https://greasyfork.org/ja/scripts/490020-
+// @downloadURL  https://greasyfork.org/ja/scripts/490020-
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 (function() {
     'use strict';
     const $ = jQuery;
-
-    const base64 = (text) => {
-        const textEncoder = new TextEncoder();
-        const encodeString = string => textEncoder.encode(string);
-        const decodeBinaryString = uint8Array => uint8Array.reduce(
-            (binaryString, uint8) => binaryString + String.fromCharCode(uint8),
-            '',
-        );
-        const uint8ArrayA = encodeString(text);
-        const binaryStringA = decodeBinaryString(uint8ArrayA);
-        return btoa(binaryStringA);
-    };
 
     // ブクマのしおり・最新話ボタンの調整
     const adjustBookmarkEpButtons = (node) => {
@@ -49,6 +40,7 @@
             }
         }
     };
+
     // ブクマの設定ボタンのメニューを単純なリンクに
     const adjustBookmarkSettingButton = (node) => {
         node.contents().each((idx,elm) => {
@@ -61,10 +53,8 @@
         node.find("ul").remove();
         node.append(settingLink);
     };
-    //
-    //const styleLink = $('<link rel="stylesheet" type="text/css">');
-    //styleLink.attr("href", 'data:text/css;base64,'+base64(newCss));
 
+    // カテゴリ内をプルダウンじゃなくリンクボタンにする
     const replaceBookmarkCategory = (node) => {
         const newDiv = $("<div>").attr("class", "___narou_bookmark");
         const current = node.wrapInner(newDiv).children(0).unwrap();
@@ -109,6 +99,7 @@
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
 
+    /*css*/
     const newCss = `
 body {
     font-family: 'UD デジタル 教科書体 NP-B', 'Meiryo', 'MS PGothic', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
@@ -270,6 +261,8 @@ span.p-up-bookmark-item__setting {
     display: block;
 }
 `;
+    /*!css*/
+
     const styleLink = $('<style>');
     styleLink.text(newCss);
     $("head").append(styleLink);
