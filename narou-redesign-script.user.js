@@ -2,7 +2,7 @@
 // @name         小説家になろう デザイン調整スクリプト
 // @namespace    https://github.com/todkuro/
 // @author       todokuro
-// @version      0.1
+// @version      0.3
 // @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
@@ -58,8 +58,11 @@
     const replaceBookmarkCategory = (node) => {
         const newDiv = $("<div>").attr("class", "___narou_bookmark");
         const current = node.wrapInner(newDiv).children(0).unwrap();
+        const hasSelected = current.children("option[value][selected]").length >= 1;
         current.children("option[value]").each((idx, elm) => {
-            $(elm).wrapInner($("<a>").attr("href", $(elm).val())).children(0).unwrap();
+            const selected = hasSelected ? $(elm).is("[selected]") : idx === 0;
+            const link = $(elm).wrapInner($("<a>").attr("href", $(elm).val())).children(0).unwrap();
+            if(selected) link.addClass("___selected");
         });
     };
 
@@ -175,7 +178,9 @@ a.c-button--outline,
     margin-bottom: -1px;
     background: #fff;
 }
-
+.___narou_bookmark a.___selected {
+    background: beige;
+}
 
 div.l-page-title,
 div.c-up-page-description {
