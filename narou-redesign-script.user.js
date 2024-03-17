@@ -19,14 +19,19 @@
 
     // ブクマのしおり・最新話ボタンの調整
     const adjustBookmarkEpButtons = (node) => {
+        const buttonCombo = node.closest(".c-button-combo");
         // 最初から読む or bookmark
         if(node.is(".c-button-combo a.c-button:nth-child(odd)")) {
             node.removeClass("c-button--primary");
             node.addClass("c-button--outline");
+            if(node.find("[class*='--siori']").length >= 1) {
+                buttonCombo.addClass("__has_shiori");
+            } else {
+                buttonCombo.addClass("__none_shiori");
+            }
         }
         // 最新ep
         if(node.is(".c-button-combo a.c-button:nth-child(even)")) {
-            const buttonCombo = node.closest(".c-button-combo");
             const unread = buttonCombo.find("a.c-button:nth-child(odd) .p-up-bookmark-item__unread,a.c-button:nth-child(odd) .p-up-activity-item__unread");
             if(unread.length) {
                 node.append(unread.remove());
@@ -137,6 +142,10 @@ a.c-button--outline,
 .p-up-activity-item__button .__unread_many a:nth-child(even),
 .p-up-bookmark-item__button .__unread_many a:nth-child(even) {
     background-color: bisque;
+}
+.p-up-activity-item__button .__none_shiori a:nth-child(even),
+.p-up-bookmark-item__button .__none_shiori a:nth-child(even) {
+    background-color: #fdd;
 }
 .__unread_many .p-up-bookmark-item__unread {
     color: red !important;
