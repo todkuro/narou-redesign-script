@@ -2,7 +2,7 @@
 // @name         小説家になろう デザイン調整スクリプト
 // @namespace    https://github.com/todkuro/
 // @author       todokuro
-// @version      0.3
+// @version      0.4
 // @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
