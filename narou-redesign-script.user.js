@@ -2,13 +2,13 @@
 // @name         小説家になろう デザイン調整スクリプト
 // @namespace    https://github.com/todkuro/
 // @author       todokuro
-// @version      0.4
+// @version      0.5
 // @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
-// @updateURL    https://greasyfork.org/ja/scripts/490020-
-// @downloadURL  https://greasyfork.org/ja/scripts/490020-
+// @updateURL    https://greasyfork.org/ja/scripts/490020
+// @downloadURL  https://greasyfork.org/ja/scripts/490020
 // @grant        none
 // @license      MIT
 // ==/UserScript==
@@ -78,6 +78,7 @@
         });
     };
 
+    let status = false
     let bookmarkCategory = undefined;
     // MutationObserver
     const observer = new MutationObserver((mutationsList, observer) => {
@@ -91,10 +92,13 @@
                     bookmarkCategory = elm.remove();
                 });
             }
-            if ($(mutation.target).is(".l-container") && bookmarkCategory) {
-                forEachNodes(mutation, ".l-sidebar", (elm) => {
-                    elm.append(bookmarkCategory);
-                });
+            if (bookmarkCategory) {
+                if ($(mutation.target).is(".l-container")) {
+                    status = true;
+                    forEachNodes(mutation, ".l-sidebar", (elm) => {
+                        elm.append(bookmarkCategory);
+                    });
+                }
             }
             if ($(mutation.target).is(".c-form__group")) {
                 forEachNodes(mutation, "select.js-bookmark_list_form_select", replaceBookmarkCategory);
@@ -102,6 +106,31 @@
             if ($(mutation.target).is(".p-up-bookmark-item__button .c-button-combo,.p-up-activity-item__button .c-button-combo,.p-up-bookmark-item__header")) {
                 forEachNodes(mutation, ".c-button", adjustBookmarkEpButtons);
                 forEachNodes(mutation, ".p-up-bookmark-item__menu", adjustBookmarkSettingButton);
+            }
+
+            // 上とほぼ同じ処理。個別でなくbodyにまとめて入ってくることがある
+            if ( !status && $(mutation.target).find(".l-main").length >= 1 ) {
+                const elm = $(mutation.target).find(".l-main .p-up-bookmark-category");
+                bookmarkCategory = elm.remove();
+                $(mutation.target).find(".l-container .l-sidebar").each((idx, elm) => {
+                    $(elm).append(bookmarkCategory);
+                });
+                if ( !status.container && $(mutation.target).find(".l-container").length >= 1 ) {
+                    forEachNodes(mutation, ".l-sidebar", (elm) => {
+                        elm.append(bookmarkCategory);
+                    });
+                }
+                if ($(mutation.target).find(".c-form__group").length >= 1) {
+                    $(mutation.target).find(".c-form__group select.js-bookmark_list_form_select").each((idx,elm) => {
+                        replaceBookmarkCategory($(elm));
+                    });
+                }
+
+                const bookmarkItems = $(mutation.target).find(".p-up-bookmark-item__button .c-button-combo,.p-up-activity-item__button .c-button-combo,.p-up-bookmark-item__header");
+                if (bookmarkItems.length >= 1) {
+                    bookmarkItems.find(".c-button").each((idx,elm) => adjustBookmarkEpButtons($(elm)));
+                    bookmarkItems.find(".p-up-bookmark-item__menu").each((idx,elm) => adjustBookmarkSettingButton($(elm)));
+                }
             }
         }
     });
@@ -149,6 +178,10 @@ a.c-button--outline,
 }
 .__unread_many .p-up-bookmark-item__unread {
     color: red !important;
+}
+
+.l-container {
+    flex-direction: row-reverse;
 }
 
 .c-form .c-form__label {
