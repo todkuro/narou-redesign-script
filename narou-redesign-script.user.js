@@ -2,7 +2,7 @@
 // @name         小説家になろう デザイン調整スクリプト
 // @namespace    https://github.com/todkuro/
 // @author       todokuro
-// @version      0.5
+// @version      0.6
 // @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
@@ -87,7 +87,7 @@
             if (mutation.target.className === "l-footer") {
                 observer.disconnect();
             }
-            if ($(mutation.target).is(".l-main") && !isSmartPhone) {
+            if ($(mutation.target).is(".l-main .c-up-list-tools") && !isSmartPhone) {
                 forEachNodes(mutation, ".p-up-bookmark-category", (elm) => {
                     bookmarkCategory = elm.remove();
                 });
@@ -109,7 +109,7 @@
             }
 
             // 上とほぼ同じ処理。個別でなくbodyにまとめて入ってくることがある
-            if ( !status && $(mutation.target).find(".l-main").length >= 1 ) {
+            if ( !status && $(mutation.target).find(".l-main .c-up-list-tools").length >= 1 ) {
                 const elm = $(mutation.target).find(".l-main .p-up-bookmark-category");
                 bookmarkCategory = elm.remove();
                 $(mutation.target).find(".l-container .l-sidebar").each((idx, elm) => {
@@ -204,7 +204,7 @@ a.c-button--outline,
     display: inline-block;
     width: calc(100% / 3.2);
     line-height: 2.5;
-    border-bottom: 1px solid silver;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: center;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -215,7 +215,7 @@ a.c-button--outline,
     white-space: nowrap;
     line-height: 2em;
     display: block;
-    border: 1px solid silver;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 5px 12px;
     margin-bottom: -1px;
     background: #fff;
@@ -233,6 +233,10 @@ h3.c-up-headline {
 }
 .c-up-chk-item__content {
     width: 90%;
+}
+.c-up-pager {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .c-up-filter {
     display: flex;
