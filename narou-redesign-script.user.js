@@ -2,7 +2,7 @@
 // @name         小説家になろう デザイン調整スクリプト
 // @namespace    https://github.com/todkuro/
 // @author       todokuro
-// @version      0.6
+// @version      0.7
 // @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
@@ -32,7 +32,7 @@
         }
         // 最新ep
         if(node.is(".c-button-combo a.c-button:nth-child(even)")) {
-            const unread = buttonCombo.find("a.c-button:nth-child(odd) .p-up-bookmark-item__unread,a.c-button:nth-child(odd) .p-up-activity-item__unread");
+            const unread = buttonCombo.find("a.c-button:nth-child(even) .p-up-bookmark-item__unread,a.c-button:nth-child(even) .p-up-activity-item__unread");
             if(unread.length) {
                 node.append(unread.remove());
                 buttonCombo.addClass("___has_unread");
@@ -145,7 +145,6 @@ body {
     padding: 3px 0 0;
 }
 a,
-a.c-button--outline,
 .p-up-bookmark-item__title>a,
 .p-up-activity-item__title>a,
 .p-up-bookmark-item__name>a,
@@ -153,16 +152,12 @@ a.c-button--outline,
 .___narou_bookmark a {
     color: #0033cc;
 }
+a.c-button--outline,
+a.c-button--primary {
+    color: #0033cc !important;
+}
 .___narou_bookmark a:hover {
     background: #ddd !important;
-}
-.p-up-activity-item__button a:nth-child(even),
-.p-up-bookmark-item__button a:nth-child(even) {
-    background-color: #f3f3f3;
-}
-.p-up-activity-item__button a:nth-child(odd),
-.p-up-bookmark-item__button a:nth-child(odd) {
-    background-color: #f3f3f3;
 }
 .p-up-activity-item__button .__unread_one a:nth-child(even),
 .p-up-bookmark-item__button .__unread_one a:nth-child(even) {
