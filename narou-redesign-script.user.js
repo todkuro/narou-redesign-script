@@ -2,8 +2,8 @@
 // @name         小説家になろう デザイン調整スクリプト
 // @namespace    https://github.com/todkuro/
 // @author       todokuro
-// @version      0.7
-// @description  小説家になろうの表示の改善を目的としたTampermonkey用スクリプト
+// @version      0.8
+// @description  小説家になろうの表示の改善を目的としたTampermonkey/Violentmonkey用スクリプト
 // @match        https://syosetu.com/*
 // @run-at       document-start
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
@@ -19,9 +19,9 @@
 
     // ブクマのしおり・最新話ボタンの調整
     const adjustBookmarkEpButtons = (node) => {
-        const buttonCombo = node.closest(".c-button-combo");
+        const buttonCombo = node.closest(".p-up-bookmark-item__button-group");
         // 最初から読む or bookmark
-        if(node.is(".c-button-combo a.c-button:nth-child(odd)")) {
+        if(node.is(".p-up-bookmark-item__button-group a.c-button:nth-child(odd)")) {
             node.removeClass("c-button--primary");
             node.addClass("c-button--outline");
             if(node.find("[class*='--siori']").length >= 1) {
@@ -31,7 +31,7 @@
             }
         }
         // 最新ep
-        if(node.is(".c-button-combo a.c-button:nth-child(even)")) {
+        if(node.is(".p-up-bookmark-item__button-group a.c-button:nth-child(even)")) {
             const unread = buttonCombo.find("a.c-button:nth-child(even) .p-up-bookmark-item__unread,a.c-button:nth-child(even) .p-up-activity-item__unread");
             if(unread.length) {
                 node.append(unread.remove());
@@ -103,7 +103,7 @@
             if ($(mutation.target).is(".c-form__group")) {
                 forEachNodes(mutation, "select.js-bookmark_list_form_select", replaceBookmarkCategory);
             }
-            if ($(mutation.target).is(".p-up-bookmark-item__button .c-button-combo,.p-up-activity-item__button .c-button-combo,.p-up-bookmark-item__header")) {
+            if ($(mutation.target).is(".p-up-bookmark-item__button-group,.p-up-bookmark-item__header")) {
                 forEachNodes(mutation, ".c-button", adjustBookmarkEpButtons);
                 forEachNodes(mutation, ".p-up-bookmark-item__menu", adjustBookmarkSettingButton);
             }
@@ -126,7 +126,7 @@
                     });
                 }
 
-                const bookmarkItems = $(mutation.target).find(".p-up-bookmark-item__button .c-button-combo,.p-up-activity-item__button .c-button-combo,.p-up-bookmark-item__header");
+                const bookmarkItems = $(mutation.target).find(".p-up-bookmark-item");
                 if (bookmarkItems.length >= 1) {
                     bookmarkItems.find(".c-button").each((idx,elm) => adjustBookmarkEpButtons($(elm)));
                     bookmarkItems.find(".p-up-bookmark-item__menu").each((idx,elm) => adjustBookmarkSettingButton($(elm)));
@@ -146,9 +146,7 @@ body {
 }
 a,
 .p-up-bookmark-item__title>a,
-.p-up-activity-item__title>a,
 .p-up-bookmark-item__name>a,
-.p-up-activity-item__name>a,
 .___narou_bookmark a {
     color: #0033cc;
 }
@@ -157,22 +155,19 @@ a.c-button--primary {
     color: #0033cc !important;
 }
 .___narou_bookmark a:hover {
-    background: #ddd !important;
+    background: #dddddd !important;
 }
-.p-up-activity-item__button .__unread_one a:nth-child(even),
-.p-up-bookmark-item__button .__unread_one a:nth-child(even) {
+.p-up-bookmark-item .__unread_one a:nth-child(even) {
     background-color: #bfe6aa;
 }
-.p-up-activity-item__button .__unread_many a:nth-child(even),
-.p-up-bookmark-item__button .__unread_many a:nth-child(even) {
-    background-color: bisque;
+.p-up-bookmark-item .__unread_many a:nth-child(even) {
+    background-color: #ffe4c4;
 }
-.p-up-activity-item__button .__none_shiori a:nth-child(even),
-.p-up-bookmark-item__button .__none_shiori a:nth-child(even) {
-    background-color: #fdd;
+.p-up-bookmark-item .__none_shiori a:nth-child(even) {
+    background-color: #ffdddd;
 }
 .__unread_many .p-up-bookmark-item__unread {
-    color: red !important;
+    color: #ff0000 !important;
 }
 
 .l-container {
@@ -192,7 +187,7 @@ a.c-button--primary {
 
 .l-content .c-form .___narou_bookmark {
     text-align: center;
-    background: #fff;
+    background: #ffffff;
     line-height: 0;
 }
 .l-content .c-form .___narou_bookmark a {
@@ -213,10 +208,10 @@ a.c-button--primary {
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 5px 12px;
     margin-bottom: -1px;
-    background: #fff;
+    background: #ffffff;
 }
 .___narou_bookmark a.___selected {
-    background: beige;
+    background: #f5f5dc;
 }
 
 div.l-page-title,
@@ -230,7 +225,7 @@ h3.c-up-headline {
     width: 90%;
 }
 .c-up-pager {
-    background-color: #fff;
+    background-color: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 .c-up-filter {
@@ -278,7 +273,7 @@ span.p-up-bookmark-item__setting {
     z-index: 4;
 }
 .c-up-panel__header.c-up-panel__header--toolbar button.c-up-panel__button {
-    background: #fff;
+    background: #ffffff;
 }
 
 .p-up-bookmark-item__title {
